@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from datetime import datetime
-from flask import (Flask, request, sessions, g, redirect, 
+from flask import (Flask, request, session, g, redirect, 
                    url_for, abort, render_template, flash)
 
 
@@ -19,7 +19,8 @@ app.config.update(dict(
 
 
 def connect_db():
-    rv = sqlite3.connect(app.config['DATABASE'])
+    rv = sqlite3.connect(app.config['DATABASE'], 
+                         detect_types=sqlite3.PARSE_DECLTYPES)
     rv.row_factory = sqlite3.Row
     return rv
 
@@ -54,19 +55,21 @@ def show_posts():
     db = get_db()
     cur = db.execute('select title, content, created from posts order by id desc')
     posts = cur.fetchall()
-    return render_template('index.html', post=posts)
+    return render_template('index.html', posts=posts)
 
 
-@app.route('/add', methods=['POST'])
+@app.route('/add', methods=['GET', 'POST'])
 def add_post():
-    if not session.get('logged_in'):
-        abort(401)
-    db = get_db()
-    db = execute('insert into posts (title, content, created) values (?, ?, ?)',
-                 [request.form['title'], request.form['content'], datetime.now()])
-    db.commit()
-    flash('New post was successfully posted')
-    return redirect(url_for('show_posts'))
+    if request.method == 'POST':
+        if not session.get('logged_in'):
+            abort(401)
+        db = get_db()
+        db.execute('insert into posts (title, content, created) values (?, ?, ?)',
+                   [request.form['title'], request.form['content'], datetime.now()])
+        db.commit()
+        flash('New post was successfully posted', 'success')
+        return redirect(url_for('show_posts'))
+    return render_template('add_post.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -79,7 +82,7 @@ def login():
             error = 'Invalid password'
         else:
             session['logged_in'] = True
-            flash('You were logged in')
+            flash('You were logged in', 'success')
             return redirect(url_for('show_posts'))
     return render_template('login.html', error=error)
 
@@ -87,7 +90,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    flash('You were logged out')
+    flash('You were logged out', 'warning')
     return redirect(url_for('show_posts'))
 
 if __name__ == '__main__':
