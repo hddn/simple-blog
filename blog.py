@@ -53,10 +53,49 @@ def initdb_command():
 @app.route('/')
 def show_posts():
     db = get_db()
-    cur = db.execute('select title, content, created from posts order by id desc')
+    ordering = request.args.get('order_by_date')
+    if not ordering or ordering == '1':
+        cur = db.execute('select title, preview, created, id ' 
+                         'from posts where archived = 0 order by created desc')        
+    else:
+        cur = db.execute('select title, preview, created, id ' 
+                         'from posts where archived = 0 order by created ')
     posts = cur.fetchall()
     return render_template('index.html', posts=posts)
 
+
+@app.route('/archive')
+def archive():
+    db = get_db()
+    ordering = request.args.get('order_by_date')
+    if not ordering or ordering == '1':
+        cur = db.execute('select title, preview, created, id ' 
+                         'from posts where archived = 1 order by created desc')        
+    else:
+        cur = db.execute('select title, preview, created, id ' 
+                         'from posts where archived = 1 order by created')
+    posts = cur.fetchall()
+    return render_template('index.html', posts=posts)
+
+
+@app.route('/view_post/<id>', methods=['GET', 'POST'])
+def view_post(id):
+    if request.method == 'POST':
+        if not session.get('logged_in'):
+            abort(401)
+
+        db = get_db()
+        db.execute('update posts set archived = 1 where id = {}'.format(id))
+        db.commit()
+        flash('Post was moved to archive', 'success')
+        return redirect(url_for('show_posts'))
+    
+    db = get_db()
+    cur = db.execute('select title, content, created, id ' 
+                     'from posts where id = {}'.format(id))
+    posts = cur.fetchall()
+    return render_template('view_post.html', posts=posts)
+ 
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_post():
@@ -64,8 +103,16 @@ def add_post():
         if not session.get('logged_in'):
             abort(401)
         db = get_db()
-        db.execute('insert into posts (title, content, created) values (?, ?, ?)',
-                   [request.form['title'], request.form['content'], datetime.now()])
+        content = request.form['preview'] + request.form['content']
+        
+        db.execute('insert into posts '
+                   '(title, preview, content, created, archived) '
+                   'values (?, ?, ?, ?, ?)',
+                   [request.form['title'],
+                    request.form['preview'],
+                    content, 
+                    datetime.now(),
+                    0])
         db.commit()
         flash('New post was successfully posted', 'success')
         return redirect(url_for('show_posts'))
@@ -92,6 +139,7 @@ def logout():
     session.pop('logged_in', None)
     flash('You were logged out', 'warning')
     return redirect(url_for('show_posts'))
+
 
 if __name__ == '__main__':
     app.run()

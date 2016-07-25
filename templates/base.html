@@ -26,10 +26,11 @@
               
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
+                  <li><a href="{{ url_for('archive') }}">Archive</a></li>
                   {% if session.logged_in %}
                     <li class="active"><a href="{{ url_for('add_post') }}">Create Post</a></li>
                     <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-                  {% else %}
+                  {% else %}                    
                     <li><a href="{{ url_for('login') }}">Log In</a></li>
                   {% endif %}                  
                 </ul>               
@@ -52,13 +53,18 @@
       
 
       <div class="row" id="page-header">
+        
+          {% block title %}{% endblock title %}
+                        
+      </div>
+      <hr>
+
+      <div class="row" id="page-content">
         <div class="col-xs-12">
-          <h2>{% block title %}{% endblock title %}</h2>
-          <hr>
-          {% block content %}{% endblock content %}
+          {% block content %}{% endblock content %}          
         </div>        
       </div>
-        
+              
       <div class="row" id="footer">
         <div class="col-xs-12">
         <hr>        

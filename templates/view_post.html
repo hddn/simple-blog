@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Blog entries{% endblock title %}
+
+{% block content %}
+
+  {% for post in posts %}
+    <h3>{{ post.title }}</h3>
+    <p>Created {{ post.created.strftime('%d/%m/%Y at %H:%M') }}</p>
+    {{ post.content }}
+    
+    <div>
+    <form action="{{ url_for('view_post', id=post.id) }}" method="post">
+      <div class="form-group">
+        <div class="col-sm-12">
+          <button type="submit" class="btn btn-primary">Move to Archive</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  {% endfor %}
+  
+{% endblock content %}
