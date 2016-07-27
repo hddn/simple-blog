@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}
-  <div class="col-xs-10">
-    <h2>Blog entries</h2>
-  </div>
-  <div class="col-sm-2" style="margin-top: 30px">
-    <a href="{% if request.path == '/archive' %}{{ url_for('archive') }}{% else %}{{ url_for('show_posts') }}{% endif %}?order_by_date={% if request.args.get('order_by_date') == '0' %}1{% else %}0{% endif %}">Sort by date {% if request.args.get('order_by_date') == '0' %}&darr;{% else %}&uarr;{% endif %}</a>    
-  </div>
+{% block meta_title %} | Blog Entries {% endblock meta_title%}
 
-{% endblock title %}
+{% block title %}Blog Entries{% endblock title %}
+
+{% block extra_title %}
+  
+  <div class="col-sm-2" style="margin-top: 30px">
+    <a href="{% if request.path == '/archive' %}{{ url_for('archive') }}{% else %}{{ url_for('show_posts') }}{% endif %}?order_by_date={% if request.args.get('order_by_date') == '0' %}1{% else %}0{% endif %}">sort by date {% if request.args.get('order_by_date') == '0' %}&darr;{% else %}&uarr;{% endif %}</a>    
+  </div>    
+
+{% endblock extra_title %}
 
 {% block content %}
   {% for post in posts %}
     <h3><a href="{{ url_for('view_post', id=post.id) }}">{{ post.title }}</a></h3>
     <p>Created {{ post.created.strftime('%d/%m/%Y at %H:%M') }}</p>
-    {{ post.preview }}
+    {{ post.preview|safe }}
     <br>
     <br>
 

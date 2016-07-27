@@ -10,8 +10,7 @@ app.config.from_object(__name__)
 
 
 app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, '..', 'blog.db'),
-    DEBUG=True,
+    DATABASE=os.path.join(app.root_path, '..', 'blog.db'),    
     SECRET_KEY='very_secret_key',
     USERNAME='admin',
     PASSWORD='admin'
@@ -142,4 +141,16 @@ def logout():
 
 
 if __name__ == '__main__':
+    app.debug = False  
+    import logging
+    from logging.handlers import RotatingFileHandler
+    logger = logging.getLogger('werkzeug')
+    file_handler = RotatingFileHandler('blog.log',
+                                        maxBytes=1024 * 1024 * 10,
+                                        backupCount=10)
+    file_handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'
+                                  ' - [in %(pathname)s:%(lineno)d]')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
     app.run()

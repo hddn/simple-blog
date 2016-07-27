@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Blog entries{% endblock title %}
+{% block meta_title %} | View Post {% endblock meta_title%}
 
 {% block content %}
 
   {% for post in posts %}
-    <h3>{{ post.title }}</h3>
+    <h2>{{ post.title }}</h2>
     <p>Created {{ post.created.strftime('%d/%m/%Y at %H:%M') }}</p>
-    {{ post.content }}
+    {{ post.content|safe }}
     
     <div>
     <form action="{{ url_for('view_post', id=post.id) }}" method="post">
