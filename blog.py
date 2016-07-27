@@ -3,11 +3,14 @@ import sqlite3
 from datetime import datetime
 from flask import (Flask, request, session, g, redirect, 
                    url_for, abort, render_template, flash)
+from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+APP_ROOT = os.path.realpath(os.path.dirname(__file__))
+ALLOWED_FILES = set(['png', 'gif', 'jpg', 'jpeg', 'mp3'])
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, '..', 'blog.db'),    
@@ -116,6 +119,29 @@ def add_post():
         flash('New post was successfully posted', 'success')
         return redirect(url_for('show_posts'))
     return render_template('add_post.html')
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_FILES
+
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    path = os.path.join(APP_ROOT, 'static')
+    if request.method == 'POST':
+        file = request.files['file']
+        if file.filename == '':
+            flash('No file selected!', 'warning')
+            return redirect(url_for('add_post'))
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)            
+            file.save(os.path.join(path, filename))
+    return redirect(url_for('add_post'))
+
+
+
+
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
