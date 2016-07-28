@@ -34,10 +34,13 @@
       </div>
     </div>
   </form>
-
+  
   <h3>Upload File</h3>
   <form id="upload-form" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">  
-    <span><input type="file" name="file"></input><button type="submit" class="btn btn-primary">Upload</button></span>
-          
+    <span><input type="file" name="file"></input><button type="submit" class="btn btn-primary" style="margin-top: 30px">Upload</button></span>
   </form>
-{% endblock content%}
+  
+{% endblock content %}
+
+{% block extra_js %}<script type="text/javascript">CKEDITOR.replace( 'preview' );</script>{% endblock extra_js %}
+
