@@ -2,8 +2,8 @@
 simple blog on flask
 ## Installation:
 ```
-pip install  -r requirements.txt
-export FLASK_APP=blog.py
+pip install -r requirements.txt
+export FLASK_APP=run.py
 flask initdb
-flask run
+python run.py
 ```
