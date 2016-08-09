@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block meta_title %} | Create Post {% endblock meta_title%}
+
+{% block title %}Create Post{% endblock title%}
+
+{% block content %}
+  <form action="{{ url_for('add_post') }}" class="form-horizontal" method="post">
+    <div class="form-group">
+      <label for="title" class="col-sm-2 control-label">Title</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="title" name="title">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="preview" class="col-sm-2 control-label">Preview</label>
+      <div class="col-sm-10">
+        <textarea type="text" rows="9" class="form-control" id="preview" name="preview" placeholder="Put first paragraphs here"></textarea>
+      </div>
+
+    </div>
+    <div class="form-group">
+      <label for="content" class="col-sm-2 control-label">Content</label>
+      <div class="col-sm-10">
+        <textarea type="text" rows="9" class="form-control" id="content" name="content"></textarea>
+      </div>
+      
+    </div>    
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn btn-default" href="{{ url_for('show_posts') }}" role="button">Cancel</a>
+      </div>
+    </div>
+  </form>
+  
+  <h3>Upload File</h3>
+  <form id="upload-form" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">  
+    <span><input type="file" name="file"></input><button type="submit" class="btn btn-primary" style="margin-top: 30px">Upload</button></span>
+  </form>
+  
+{% endblock content %}
+
+{% block extra_js %}<script type="text/javascript">CKEDITOR.replace( 'preview' );</script>{% endblock extra_js %}
+

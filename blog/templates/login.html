@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block meta_title %} | Login {% endblock meta_title%}
+
+{% block title %}<h2>Login</h2>{% endblock title %}
+
+{% block content %}
+  {% if error %}
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <p>{{ error }}</p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <form action="{{ url_for('login') }}" class="form-horizontal" method="post">
+    <div class="form-group">
+      <label for="login" class="col-sm-2 control-label">Username</label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="username" name="username">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password" class="col-sm-2 control-label">Password</label>
+      <div class="col-sm-6">
+        <input type="password" class="form-control" id="password" name="password">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default">Sign in</button>
+      </div>
+    </div>
+</form>
+{% endblock content %}

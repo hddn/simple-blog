@@ -1,0 +1,1 @@
+from img_resizer import edit_image
