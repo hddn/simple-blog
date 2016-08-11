@@ -2,7 +2,7 @@
 simple blog on flask
 ## Installation:
 ```
-pip install -r requirements.txt
+python setup.py install
 export FLASK_APP=run.py
 flask initdb
 python run.py
