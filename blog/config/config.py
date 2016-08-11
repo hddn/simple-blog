@@ -9,8 +9,6 @@ config_path = os.path.join(root, 'config.ini')
 config = ConfigParser.ConfigParser()
 config.read(config_path)
 
-CSRF_ENABLED = True
-
 APPLICATION_ROOT = config.get('PATHS', 'app_root')
 DATABASE = config.get('PATHS', 'db')
 SECRET_KEY = config.get('SECRETS', 'key')

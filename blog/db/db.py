@@ -2,10 +2,11 @@
 import sqlite3
 from flask import g
 from .. import app
+from ..config import DATABASE
 
 
 def connect_db():
-    rv = sqlite3.connect(app.config['DATABASE'],
+    rv = sqlite3.connect(DATABASE,
                          detect_types=sqlite3.PARSE_DECLTYPES)
     rv.row_factory = sqlite3.Row
     return rv

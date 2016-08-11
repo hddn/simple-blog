@@ -1,7 +1,12 @@
 from flask import Flask
+from config import DATABASE, SECRET_KEY, USERNAME, PASSWORD
+
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.update(DATABASE=DATABASE,
+                  SECRET_KEY=SECRET_KEY,
+                  USERNAME=USERNAME,
+                  PASSWORD=PASSWORD)
 
 from views import (PostCreateView, PostView, PostsView,
                    UploadFileView, LoginView, LogoutView)
