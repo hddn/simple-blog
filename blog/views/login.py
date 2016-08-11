@@ -1,7 +1,7 @@
 from flask import (request, session, redirect,
                    url_for, render_template, flash)
 
-from ..config import USERNAME
+from ..config import USERNAME, PASSWORD
 from ..util import check_password
 from .. import app
 
@@ -12,7 +12,7 @@ def login():
     if request.method == 'POST':
         if request.form['username'] != USERNAME:
             error = 'Invalid username'
-        elif not check_password(request.form['password']):
+        elif not check_password(request.form['password'], PASSWORD):
             error = 'Invalid password'
         else:
             session['logged_in'] = True

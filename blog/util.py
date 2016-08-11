@@ -2,17 +2,19 @@ import logging
 from logging.handlers import RotatingFileHandler
 from functools import wraps
 
-from werkzeug.security import check_password_hash
-
-from .config import ALLOWED_FILES, PASSWORD
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
-def check_password(password, hashed_pass=PASSWORD):
+def hash_password(password):
+    return generate_password_hash(password)
+
+
+def check_password(password, hashed_pass):
     return check_password_hash(hashed_pass, password)
 
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_FILES
+def allowed_file(filename, allowed_files):
+    return '.' in filename and filename.rsplit('.', 1)[1] in allowed_files
 
 
 def logger():

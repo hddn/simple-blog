@@ -1,14 +1,21 @@
 import os
+import ConfigParser
 
+from ..util import hash_password
+
+
+root = os.path.realpath(os.path.dirname(__file__))
+config_path = os.path.join(root, 'config.ini')
+config = ConfigParser.ConfigParser()
+config.read(config_path)
 
 CSRF_ENABLED = True
-ROOT = os.path.realpath(os.path.dirname(__file__))
-APP_ROOT = os.path.join(ROOT, 'blog')
 
-DATABASE = os.path.join(ROOT, '..', 'blog.db')
-SECRET_KEY = 'very_secret_key'
-USERNAME = 'admin'
-PASSWORD = 'pbkdf2:sha1:1000$fQPAbL6Y$74fac58d9b19e991e46ac5d4e52db7402556843b'
+APPLICATION_ROOT = config.get('PATHS', 'app_root')
+DATABASE = config.get('PATHS', 'db')
+SECRET_KEY = config.get('SECRETS', 'key')
+USERNAME = config.get('SECRETS', 'username')
+PASSWORD = hash_password(config.get('SECRETS', 'password'))
 
 ALLOWED_FILES = set(['png', 'gif', 'jpg', 'jpeg', 'mp3'])
 PIC_EXTENSIONS = set(['png', 'gif', 'jpg', 'jpeg'])
