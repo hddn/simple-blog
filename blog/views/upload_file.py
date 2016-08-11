@@ -23,6 +23,8 @@ class UploadFileView(View):
                 filename = secure_filename(file.filename)
                 if filename.rsplit('.', 1)[1] != 'mp3':
                     edit_image(file, filename)
+                    flash('File was uploaded successfully', 'success')
                 else:
                     file.save(os.path.join(path, filename))
+                    flash('File was uploaded successfully', 'success')
         return redirect(url_for('add_post'))

@@ -4,7 +4,7 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 from views import (PostCreateView, PostView, PostsView,
-                   UploadFileView, login, logout)
+                   UploadFileView, LoginView, LogoutView)
 from util import log_errors
 
 
@@ -18,3 +18,7 @@ app.add_url_rule('/add',
                  view_func=log_errors(PostCreateView.as_view('add_post')))
 app.add_url_rule('/upload',
                  view_func=log_errors(UploadFileView.as_view('upload_file')))
+app.add_url_rule('/login',
+                 view_func=log_errors(LoginView.as_view('login')))
+app.add_url_rule('/logout',
+                 view_func=log_errors(LogoutView.as_view('logout')))
