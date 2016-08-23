@@ -9,6 +9,8 @@ OPACITY = 0.7
 
 root = os.path.realpath(os.path.dirname(__file__))
 path = os.path.join(root, '..', 'static', 'uploads')
+if not os.path.exists(path):
+    os.makedirs(path)
 
 
 def add_watermark(image, text=TEXT, opacity=OPACITY):
